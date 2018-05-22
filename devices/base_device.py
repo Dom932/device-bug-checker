@@ -112,7 +112,7 @@ class BaseDevice(ABC):
 
     def connect(self):
         """
-        TODO
+        Establishes connection to device, using netmiko
         :return:
         """
 
@@ -156,7 +156,7 @@ class BaseDevice(ABC):
                         self.set_version()
                         self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
                         self._logger.info(f"{self.ipaddr} - Connection established")
-                        return
+                        return None
 
                     except NetMikoAuthenticationException:
                         # ignore except - unable to connect based on current User/pass type combo
