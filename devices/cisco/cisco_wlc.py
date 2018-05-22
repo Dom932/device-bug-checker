@@ -1,3 +1,4 @@
+import re
 from devices.base_device import BaseDevice
 
 
@@ -32,8 +33,24 @@ class CiscoWLC(BaseDevice):
         Set object version attribute by connecting to device and querying it
         :return:
         """
-        # TODO
-        raise NotImplemented()
+        reqs_disconnect = False
+
+        if not self.connection:
+            self.connect()
+            reqs_disconnect = True
+
+        config = self.connection.send_command("sh sysinfo")
+
+        rexp = r"Product Version.................... ?(.*)"
+        output = re.search(rexp, config)
+
+        if output:
+            self.version = output.group(1)
+        else:
+            self.version = "Unable to determine IOS version"
+
+        if reqs_disconnect:
+            self.disconnect()
 
     def set_hostname(self):
         """

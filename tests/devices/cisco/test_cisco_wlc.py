@@ -12,6 +12,14 @@ init = {
     'version': '1.0'
 }
 
+wlc_sysinfo = "Manufacturer's Name.............................. Cisco Systems Inc.\n" \
+              "Product Name..................................... Cisco Controller\n" \
+              "Product Version.................................. 8.0.140.0\n" \
+              "Bootloader Version............................... 1.0.18\n" \
+              "Field Recovery Image Version..................... 1.0.0\n" \
+
+
+
 
 @pytest.fixture
 def device():
@@ -40,7 +48,10 @@ def device():
             return f"{init['hostname']}#"
         
         def send_command(self, command):
-            return None
+            if command.lower() == "sh sysinfo":
+                return wlc_sysinfo
+            else:
+                return None
 
     d = CiscoWLC(**init)
     d.connection = MockConnection()
@@ -92,6 +103,12 @@ class TestCiscoIOS:
 
     def test_set_version(self, device):
         """ Test set_version to set IOS version"""
+
+        device.version = None
+        assert device.version is None
+        device.set_version()
+        assert device.version == "8.0.140.0"
+
         # TODO - implment base logic in class and tests
 
     def test_set_hostname(self, device):
