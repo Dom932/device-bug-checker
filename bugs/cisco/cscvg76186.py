@@ -31,32 +31,32 @@ class CSCvg76186(BaseBug):
 
     """
 
-    @property
-    def enable_mode_required(self):
+    @staticmethod
+    def enable_mode_required():
         """
         Returns if enable mode is required for the bug check
         :return: bool
         """
         return False
 
-    @property
-    def requirements(self):
+    @staticmethod
+    def requirements():
         """
         Requirements for check_bug
         :return:
         """
         return ["connection"]
 
-    @property
-    def bug_id(self):
+    @staticmethod
+    def bug_id():
         """
         Returns the cisco Bug ID this class checks for
         :return: str - Bug ID
         """
         return "CSCvg76186"
 
-    @property
-    def affected_devices(self):
+    @staticmethod
+    def affected_devices():
         """
         Return list devices types which are affected by this put
         ["Switch","Router","Firewall","AP"]
@@ -64,16 +64,16 @@ class CSCvg76186(BaseBug):
         """
         return ["Switch"]
 
-    @property
-    def remediate_implimented(self):
+    @staticmethod
+    def remediate_implimented():
         """
         Check if remediate function implemented
         :return: bool
         """
         return False
 
-    @property
-    def manufacture(self):
+    @staticmethod
+    def manufacture():
         """
         Returns which manufacture this device bug affects
         :return: str

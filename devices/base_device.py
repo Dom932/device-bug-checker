@@ -21,10 +21,10 @@ class BaseDevice(ABC):
     def __init__(self, ipaddr=None, credentials=None, hostname=None, version=None, **kwargs):
         self.ipaddr = ipaddr
         self.credentials = credentials
-        self.hostname = hostname
-        self.version = version
         self.bugs = {}
         self.connection = None
+        self._hostname = hostname
+        self._version = version
 
     @property
     @abstractmethod
@@ -46,19 +46,42 @@ class BaseDevice(ABC):
         """
         pass
 
+    @property
     @abstractmethod
-    def set_version(self):
+    def version(self):
         """
-        Set object version attribute by connecting to device and querying it
-        :return:
+        Get device OS Version
+        :return: str
         """
         pass
 
+    @version.setter
     @abstractmethod
-    def set_hostname(self):
+    def version(self, version):
         """
-        set object hostname attribute by conneng to the device and querting it
+        Set Device OS version
+        :param version: OS version
+        :type version: str
+        :return:
+        """
+
+    @property
+    @abstractmethod
+    def hostname(self):
+        """
+        Get hostname set of device
         :return: str
+        """
+        pass
+
+    @hostname.setter
+    @abstractmethod
+    def hostname(self, hostname):
+        """
+        Set hostname
+        :param hostname: Hostname of the device
+        :type hostname: str
+        :return:
         """
         pass
 
@@ -83,8 +106,6 @@ class BaseDevice(ABC):
                 kwargs['connection'] = self.connection
             if 'ip_address' in requirements:
                 kwargs['ip_address'] = self.ipaddr
-            if 'credentials' in requirements:
-                kwargs['credentials'] = self.credentials
 
             self._logger.debug(f"{self.ipaddr} - Checking if connection is established")
             if self.check_connection():
@@ -151,9 +172,9 @@ class BaseDevice(ABC):
                         self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
                                            f"device type: {self.device_type}")
                         self.connection = ConnectHandler(**device)
-                        self.set_hostname()
+                        self.hostname()
                         self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
-                        self.set_version()
+                        self.version()
                         self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
                         self._logger.info(f"{self.ipaddr} - Connection established")
                         return None

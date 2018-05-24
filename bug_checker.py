@@ -21,7 +21,7 @@ def check_bug(device, bug_list):
     :return:
     """
 
-    device.connect()
+
     for bug in bug_list:
         _logger.info(f"{device.ipaddr} - Starting {bug.bug_id} bug check")
 

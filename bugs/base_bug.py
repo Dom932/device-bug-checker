@@ -20,7 +20,7 @@ class BaseBug(ABC):
         """
         pass
 
-    @property
+    @staticmethod
     @abstractmethod
     def bug_id(self):
         """
@@ -29,7 +29,7 @@ class BaseBug(ABC):
         """
         pass
 
-    @property
+    @staticmethod
     @abstractmethod
     def requirements(self):
         """
@@ -37,14 +37,13 @@ class BaseBug(ABC):
         bug checker function.
 
         Current support values are:
-            credentials - {"username":user, "password":pass, "secrete":secrete
             ip_address - IP address of device
             connection - netmiko.ConnectionHandler connection to the device
         :return: list of requirements
         """
         pass
 
-    @property
+    @staticmethod
     @abstractmethod
     def manufacture(self):
         """
@@ -53,7 +52,7 @@ class BaseBug(ABC):
         """
         pass
 
-    @property
+    @staticmethod
     @abstractmethod
     def enable_mode_required(self):
         """
@@ -61,7 +60,7 @@ class BaseBug(ABC):
         :return: bool
         """
 
-    @property
+    @staticmethod
     @abstractmethod
     def affected_devices(self):
         """
@@ -71,7 +70,7 @@ class BaseBug(ABC):
         """
         pass
 
-    @property
+    @staticmethod
     @abstractmethod
     def remediate_implimented(self):
         """

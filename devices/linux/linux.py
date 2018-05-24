@@ -27,36 +27,68 @@ class Linux(BaseDevice):
         """
         return "linux"
 
-    def set_version(self):
+    @property
+    def version(self):
         """
-        Set object version attribute by connecting to device and querying it
-        :return:
-        """
-
-        reqs_disconnect = False
-
-        if not self.connection:
-            self.connect()
-            reqs_disconnect = True
-
-        self.version = self.connection.send_command("uname -r")
-
-        if reqs_disconnect:
-            self.disconnect()
-
-    def set_hostname(self):
-        """
-        set object hostname attribute by conneng to the device and querting it
+        Get device OS Version
         :return: str
         """
 
-        reqs_disconnect = False
+        if self._version:
+            return self._version
+        else:
+            reqs_disconnect = False
 
-        if not self.connection:
-            self.connect()
-            reqs_disconnect = True
 
-        self.hostname = self.connection.send_command("hostname")
+            if not self.connection:
+                self.connect()
+                reqs_disconnect = True
 
-        if reqs_disconnect:
-            self.disconnect()
+            self._version = self.connection.send_command("uname -r")
+
+            if reqs_disconnect:
+                self.disconnect()
+
+            return self._version
+
+    @version.setter
+    def version(self, version):
+        """
+        Set Device OS version
+        :param version: OS version
+        :type version: str
+        :return:
+        """
+        self._version = version
+
+    @property
+    def hostname(self):
+        """
+        Get hostname set of device
+        :return: str
+        """
+        if self._hostname:
+            return self._hostname
+        else:
+            reqs_disconnect = False
+
+            if not self.connection:
+                self.connect()
+                reqs_disconnect = True
+
+            self.hostname = self.connection.send_command("hostname")
+
+            if reqs_disconnect:
+                self.disconnect()
+
+            return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname):
+        """
+        Set hostname
+        :param hostname: Hostname of the device
+        :type hostname: str
+        :return:
+        """
+        self._hostname = hostname

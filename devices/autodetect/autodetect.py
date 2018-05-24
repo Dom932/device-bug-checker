@@ -28,26 +28,58 @@ class AutoDetect(BaseDevice):
         """
         return "autodetect"
 
-    def set_version(self):
+    @property
+    def version(self):
         """
-        Set object version attribute by connecting to device and querying it
-        :return:
-        """
-        self.version = 'unknown'
-
-    def set_hostname(self):
-        """
-        set object hostname attribute by conneng to the device and querting it
+        Get device OS Version
         :return: str
         """
-        reqs_disconnect = False
 
-        if not self.connection:
-            self.connect()
-            reqs_disconnect = True
+        if self._version:
+            return self._version
+        else:
+            self._version = "unknown"
+            return self._version
 
-        hostname = self.connection.find_prompt()
-        self.hostname = hostname[0:(len(hostname) - 1)]
+    @version.setter
+    def version(self, version):
+        """
+        Set Device OS version
+        :param version: OS version
+        :type version: str
+        :return:
+        """
+        self._version = version
 
-        if reqs_disconnect:
-            self.disconnect()
+    @property
+    def hostname(self):
+        """
+        Get hostname set of device
+        :return: str
+        """
+        if self._hostname:
+            return self._hostname
+        else:
+            reqs_disconnect = False
+
+            if not self.connection:
+                self.connect()
+                reqs_disconnect = True
+
+            hostname = self.connection.find_prompt()
+            self.hostname = hostname[0:(len(hostname) - 1)]
+
+            if reqs_disconnect:
+                self.disconnect()
+
+            return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname):
+        """
+        Set hostname
+        :param hostname: Hostname of the device
+        :type hostname: str
+        :return:
+        """
+        self._hostname = hostname

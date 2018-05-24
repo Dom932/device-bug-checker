@@ -96,19 +96,20 @@ class TestCiscoIOS:
         device.exit_enable_mode()
         assert device.check_enable_mode() == False
 
-    def test_set_version(self, device):
-        """ Test set_version to set IOS version"""
-        device.version = None
-        assert device.version is None
-        device.set_version()
+    def test_version(self, device):
+        """ Test version attribute """
+        device._version = None
         assert device.version == init['version']
+        device._version = '1.1.1'
+        assert device.version == "1.1.1"
 
-    def test_set_hostname(self, device):
-        """ Test set_hostname to set hostname """
-        device.hostname = None
-        assert device.hostname is None
-        device.set_hostname()
+    def test_hostname(self, device):
+        """ Test hostname attribute """
+        device._hostname = None
         assert device.hostname == init['hostname']
+        device._hostname = "host123"
+        assert device.hostname == "host123"
+
 
 # TODO - test check bug
 

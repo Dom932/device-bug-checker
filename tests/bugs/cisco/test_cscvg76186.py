@@ -42,25 +42,25 @@ class TestCSCvg76186:
         assert isinstance(bug, CSCvg76186)
         assert isinstance(bug, CSCvg76186)
 
-    def test_requirements(self, bug):
+    def test_requirements(self):
         """ Test requirements """
-        assert bug.requirements == ['connection']
+        assert CSCvg76186.requirements() == ['connection']
 
     def test_get_bug_id(self, bug):
         """ Test get_bug_id """
-        assert bug.bug_id == 'CSCvg76186'
+        assert CSCvg76186.bug_id() == 'CSCvg76186'
 
     def test_affected_devices(self, bug):
         """ Test affected_devices """
-        assert bug.affected_devices == ['Switch']
+        assert CSCvg76186.affected_devices() == ['Switch']
 
     def test_remediate_implimented(self, bug):
         """ Test remediate_implemented"""
-        assert bug.remediate_implimented is False
+        assert CSCvg76186.remediate_implimented() is False
 
     def test_manufacture(self, bug):
         """ Test manufacture """
-        assert bug.manufacture == 'Cisco'
+        assert CSCvg76186.manufacture() == 'Cisco'
 
     def test_remediate(self, bug):
         """ Test remediate not implmented """
@@ -99,4 +99,4 @@ class TestCSCvg76186:
 
     def test_enable_mode_required(self,bug):
         """ Test if enable mode is required """
-        assert bug.enable_mode_required is False
+        assert CSCvg76186.enable_mode_required() is False
