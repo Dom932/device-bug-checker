@@ -5,7 +5,7 @@ import logging
 import argparse
 import sys
 from bugs.bug_class_mapper import BugClassMapper
-from devices import DeviceClassMapper
+from devices import DeviceClassMapper, ConnectionException
 from helpers import ThreadingHelper, DeviceHelper
 
 _logger = logging.getLogger("BugChecker")
@@ -21,20 +21,25 @@ def check_bug(device, bug_list):
     :return:
     """
 
+    try:
+        for bug in bug_list:
+            _logger.info(f"{device.ipaddr} - Starting {bug.bug_id} bug check")
 
-    for bug in bug_list:
-        _logger.info(f"{device.ipaddr} - Starting {bug.bug_id} bug check")
+            if bug.enable_mode_required:
+                _logger.debug(f"{device.ipaddr} - Enable mode required for {bug.bug_id}")
+                device.enter_enable_mode()
 
-        if bug.enable_mode_required:
-            _logger.debug(f"{device.ipaddr} - Enable mode required for {bug.bug_id}")
-            device.enter_enable_mode()
+            device.check_bug(bug)
+            _logger.info(f"{device.ipaddr} - Completed {bug.bug_id} bug check")
 
-        device.check_bug(bug)
-        _logger.info(f"{device.ipaddr} - Completed {bug.bug_id} bug check")
+        _logger.debug(f"{device.ipaddr} - Disconnecting from device")
+        device.disconnect()
 
-    _logger.debug(f"{device.ipaddr} - Disconnecting from device")
-    device.disconnect()
-    return device
+    except ConnectionException as e:
+        device.connection_error = e
+
+    finally:
+        return device
 
 
 def main(devices, bug_list, worker_threads=4):
@@ -121,24 +126,29 @@ def write_csv(output_file, bug_list, devices):
     if not isinstance(bug_list, list):
         bug_list = [bug_list]
 
-    rows = ["Hostname", "IP Address", "OS Version"]
+    rows = ["Hostname", "IP Address", "OS Version", "Connection Error"]
 
     for b in bug_list:
         rows.append(f"{b} Impacted")
         rows.append(f"{b} Output")
 
-        with open(output_file, "w") as csvfile:
-            wr = csv.writer(csvfile, dialect="excel")
+    with open(output_file, "w") as csvfile:
+        wr = csv.writer(csvfile, dialect="excel")
+        wr.writerow(rows)
 
-            wr.writerow(rows)
+        for device in devices:
 
-            for device in devices:
-                row = [device.hostname, device.ipaddr, device.version]
+            # if connection error, write blank results
+            if device.connection_error:
+                row = ["", device.ipaddr, "", device.connection_error]
+            else:
+                row = [device.hostname, device.ipaddr, device.version, device.connection_error]
+
                 for bug in bug_list:
                     row.append(device.bugs[bug].impacted)
                     row.append(device.bugs[bug].output)
 
-                wr.writerow(row)
+            wr.writerow(row)
 
 
 if __name__ == "__main__":

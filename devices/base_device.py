@@ -25,6 +25,7 @@ class BaseDevice(ABC):
         self.connection = None
         self._hostname = hostname
         self._version = version
+        self.connection_error = None
 
     @property
     @abstractmethod
@@ -180,9 +181,9 @@ class BaseDevice(ABC):
                             self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
                                                f"device type: {self.device_type}")
                             self.connection = ConnectHandler(**device)
-                            self.hostname()
+                            self.hostname
                             self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
-                            self.version()
+                            self.version
                             self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
                             self._logger.info(f"{self.ipaddr} - Connection established")
                             return None
@@ -199,10 +200,10 @@ class BaseDevice(ABC):
 
                     # If this point is reached no connection was established
                     self._logger.error(f"{self.ipaddr} - Unable to connect to device")
-                    raise ConnectionException(f"{self.ipaddr} - Unable to connect to device")
+                    raise ConnectionException("Unable to connect to device")
 
                 except NetMikoTimeoutException:
-                    raise ConnectionException(f"{self.ipaddr} - Connection to device timed out")
+                    raise ConnectionException("Connection to device timed out")
             else:
                 self._logger.error("No credentials provided")
                 raise ConnectionException("No Credentials provided")
