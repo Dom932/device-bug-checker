@@ -103,6 +103,9 @@ class BaseDevice(ABC):
             kwargs = {}
 
             if 'connection' in requirements:
+                # connection required and connection is not established
+                if not self.check_connection():
+                    self.connect()
                 kwargs['connection'] = self.connection
             if 'ip_address' in requirements:
                 kwargs['ip_address'] = self.ipaddr
@@ -137,67 +140,72 @@ class BaseDevice(ABC):
         :return:
         """
 
-        # verify if that credentials is not empty
-        if self.credentials:
-
-            self._logger.info(f"{self.ipaddr} - Attempting to connect")
-
-            # Start populating device dictionary to pass to netmiko
-            device = {
-                "ip": self.ipaddr
-            }
-
-            # convert credentials to a list if its just a dictionary
-            if isinstance(self.credentials, dict):
-                self.credentials = [self.credentials]
-            try:
-                for c in self.credentials:
-
-                    # set username / password / secret
-                    if "username" in c:
-                        device["username"] = c["username"]
-
-                    if "password" in c:
-                        device["password"] = c["password"]
-
-                    if "secret" in c:
-                        device["secret"] = c["secret"]
-                    else:
-                        # if no secret then remove it
-                        device.pop("secret", None)
-
-                    device["device_type"] = self.device_type
-
-                    try:
-                        self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
-                                           f"device type: {self.device_type}")
-                        self.connection = ConnectHandler(**device)
-                        self.hostname()
-                        self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
-                        self.version()
-                        self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
-                        self._logger.info(f"{self.ipaddr} - Connection established")
-                        return None
-
-                    except NetMikoAuthenticationException:
-                        # ignore except - unable to connect based on current User/pass type combo
-                        # Move onto next set
-                        self._logger.debug(f"{self.ipaddr} - Current username/password incorrect")
-                        pass
-                    except NetMikoTimeoutException as e:
-                        # unable to connect to device
-                        self._logger.info(f"{self.ipaddr} - Connection timeout")
-                        raise e
-
-                # If this point is reached no connection was established
-                self._logger.error(f"{self.ipaddr} - Unable to connect to device")
-                raise ConnectionException(f"{self.ipaddr} - Unable to connect to device")
-
-            except NetMikoTimeoutException:
-                raise ConnectionException(f"{self.ipaddr} - Connection to device timed out")
+        # check if connection is already open. If not establish a connection
+        if self.check_connection():
+            self._logger.info(f"{self.ipaddr} - Connection already established")
         else:
-            self._logger.error("No credentials provided")
-            raise ConnectionException("No Credentials provided")
+
+            # verify if that credentials is not empty
+            if self.credentials:
+
+                self._logger.info(f"{self.ipaddr} - Attempting to connect")
+
+                # Start populating device dictionary to pass to netmiko
+                device = {
+                    "ip": self.ipaddr
+                }
+
+                # convert credentials to a list if its just a dictionary
+                if isinstance(self.credentials, dict):
+                    self.credentials = [self.credentials]
+                try:
+                    for c in self.credentials:
+
+                        # set username / password / secret
+                        if "username" in c:
+                            device["username"] = c["username"]
+
+                        if "password" in c:
+                            device["password"] = c["password"]
+
+                        if "secret" in c:
+                            device["secret"] = c["secret"]
+                        else:
+                            # if no secret then remove it
+                            device.pop("secret", None)
+
+                        device["device_type"] = self.device_type
+
+                        try:
+                            self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
+                                               f"device type: {self.device_type}")
+                            self.connection = ConnectHandler(**device)
+                            self.hostname()
+                            self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
+                            self.version()
+                            self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
+                            self._logger.info(f"{self.ipaddr} - Connection established")
+                            return None
+
+                        except NetMikoAuthenticationException:
+                            # ignore except - unable to connect based on current User/pass type combo
+                            # Move onto next set
+                            self._logger.debug(f"{self.ipaddr} - Current username/password incorrect")
+                            pass
+                        except NetMikoTimeoutException as e:
+                            # unable to connect to device
+                            self._logger.info(f"{self.ipaddr} - Connection timeout")
+                            raise e
+
+                    # If this point is reached no connection was established
+                    self._logger.error(f"{self.ipaddr} - Unable to connect to device")
+                    raise ConnectionException(f"{self.ipaddr} - Unable to connect to device")
+
+                except NetMikoTimeoutException:
+                    raise ConnectionException(f"{self.ipaddr} - Connection to device timed out")
+            else:
+                self._logger.error("No credentials provided")
+                raise ConnectionException("No Credentials provided")
 
     def check_connection(self):
         """
