@@ -21,19 +21,28 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def bug_source():
+    def bug_reference():
         """
-        Get source of bug infornamtion
+        Get reference of bug information
         :return: str - URL to the source information
         """
         pass
 
     @staticmethod
     @abstractmethod
-    def bug_id(self):
+    def manufacture_bug_id(self):
         """
-        Abstract methods to get the bug ID
+        Returns the manufacture bug ID
         :return: str - Bug ID
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def cve_id():
+        """
+        Get the Common Vulnerabilities and Exposure (CVE) ID
+        :return: CSV ID or None if there is not one
         """
         pass
 
