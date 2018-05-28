@@ -63,11 +63,7 @@ def main(devices, bug_list, worker_threads=4):
     if not isinstance(bug_list, list):
         bug_list = [bug_list]
 
-    bugs = []
-
-    for bug in bug_list:
-        # get bug class and instantiate the class
-        bugs.append(BugClassMapper.get_bug_class(str(bug))())
+    bugs = BugClassMapper.get_bug_class(bug_list)
 
     args = {"bug_list": bugs}
 
@@ -142,6 +138,7 @@ def write_csv(output_file, bug_list, devices):
             if device.connection_error:
                 row = ["", device.ipaddr, "", device.connection_error]
             else:
+
                 row = [device.hostname, device.ipaddr, device.version, device.connection_error]
 
                 for bug in bug_list:
@@ -150,58 +147,127 @@ def write_csv(output_file, bug_list, devices):
 
             wr.writerow(row)
 
+def print_bug_detail(bug_list):
+    """
+    Print out bug details
+    :param bug_list: list of bugs to print details for.
+    :return:
+    """
+
+    # if bug_ids is not a list, convert it to list
+    if not isinstance(bug_list, list):
+        bug_list = [bug_list]
+
+    for b in BugClassMapper.get_bug_class(bug_list):
+
+        print(f"Bug ID: {b.manufacture_bug_id()}")
+        print(f"Bug Manufacture: {b.manufacture()}")
+        print(f"CVE ID: {b.cve_id()}")
+        print(f"Bug Reference: {b.bug_reference()}")
+        print(f"Bug Severity: {b.bug_severity()}")
+        print(f"Bug Description: \n{b.bug_description()}")
+        print(f"Remediate Implimented: {b.remediate_implimented()}")
+        print(f"Affected Devices: {b.affected_devices()}")
+        print(f"Enable Mode required: {b.enable_mode_required()}")
+
+
+
+def print_bug_summary():
+
+    print("-" * 115)
+    print(f"| {'Manufacture':^13} | {'Bug ID':^13} | {'CVE ID':^15} | {'Severity':^10} | {'Affected':^15} | {'Enable Mode':^13} | {'Remediate':^14} |")
+    print(f"| {'':^13} | {'':^13} | {'':^15} | {'':^10} | {'Devices':^15} | {'Required':^13} | {'Implimented':^14} |")
+    print("-" * 115)
+
+    for b in BugClassMapper.get_bug_class():
+        affected_devices = b.affected_devices()
+        print(f"| {b.manufacture():^13} | {b.manufacture_bug_id():^13} | {b.cve_id():^15} | {b.bug_severity():^10} | {affected_devices[0]:^15} | {b.enable_mode_required():^13} | {b.remediate_implimented():^14} |")
+
+        for a in affected_devices[1:len(affected_devices)]:
+            print(
+                f"| {'':^13} | {'':^13} | {'':^15} | {'':^10} | {a:^15} | {'':^13} | {'':^14} |")
+
+        print("-" * 115)
 
 if __name__ == "__main__":
 
     parse = argparse.ArgumentParser()
-    parse.add_argument("-b", "--bugid", nargs="+", required=True,
-                       help="<Required> Bug ID to test against devices. Place space between each Bug ID")
-    parse.add_argument("-i", "--inputcsv", type=str, required=True,
-                       help="<Required> Location of source CSV file")
-    parse.add_argument("-o", "--outputcsv", type=str, required=True,
-                       help="<Required> Location where output CSV should be writen")
-    parse.add_argument("-w", "--workerthreads", type=int, default=4,
+    parse.add_argument("-c", "--checkdevice", action="store_true",
+                       help="Specifies if a bug is to be checked on a device")
+    parse.add_argument("-l", "--listbugdetails", action="store_true",
+                       help="Specifies if a bug details are to be listed")
+
+    parse.add_argument("-b", "--bugid", nargs="+",
+                       help="Bug ID to check against devices if -c is set, or Bug ID to list details. Place space "
+                            "between each Bug ID")
+
+    parse.add_argument("-i", "--inputcsv", type=str,
+                       help="Location of source CSV file")
+    parse.add_argument("-o", "--outputcsv", type=str,
+                       help="Location where output CSV should be writen")
+
+    parse.add_argument("-s","--bugsummary", action="store_true",
+                       help="Prints a summary of all bugs")
+
+    parse.add_argument("--workerthreads", type=int, default=4,
                        help="Number of worker threads to use. Default is 4")
-    parse.add_argument("-lv", "--logginglevel", type=str,
+    parse.add_argument("--logginglevel", type=str,
                        choices=["critical", "error", "warning", "info", "debug", "notset"],
                        default="info",
                        help="Logging level, Default is info")
-    parse.add_argument("-lf", "--loggingtofile", action="store_true",
+    parse.add_argument("--loggingtofile", action="store_true",
                        help="Set if logging should be saved to the file")
 
     parse_args = parse.parse_args()
 
-    creds = DeviceHelper.get_credentials()
+    if not parse_args.checkdevice and not parse_args.listbugdetails:
+        print("Bug Checker requires either -c or -l to be set")
+    else:
+        if parse_args.listbugdetails:
+           if not (parse_args.bugid or parse_args.bugsummary):
+               print("If -l is spesified, --bugid or --bugsummary are required")
+           else:
+               if parse_args.bugid:
+                   print_bug_detail(parse_args.bugid)
+               elif parse_args.bugsummary:
+                   print_bug_summary()
 
-    # Setting up logging
+        elif parse_args.checkdevice:
+            if parse_args.checkdevice and not parse_args.bugid and not parse_args.inputcsv and not parse_args.outputcsv:
+                print("If -b is specified, the following are required --bug, --inputcsv as --outputcsv")
+            else:
+                creds = DeviceHelper.get_credentials()
 
-    logging_mapper = {
-        "critical": logging.CRITICAL,
-        "error": logging.ERROR,
-        "warning": logging.WARNING,
-        "info": logging.INFO,
-        "debug": logging.DEBUG,
-        "notset": logging.NOTSET
-    }
+                # Setting up logging
 
-    _logger.setLevel(logging_mapper[parse_args.logginglevel])
+                logging_mapper = {
+                    "critical": logging.CRITICAL,
+                    "error": logging.ERROR,
+                    "warning": logging.WARNING,
+                    "info": logging.INFO,
+                    "debug": logging.DEBUG,
+                    "notset": logging.NOTSET
+                }
 
-    formatter = logging.Formatter("%(asctime)s - %(threadName)s -  %(name)s - %(levelname)s - %(message)s")
+                _logger.setLevel(logging_mapper[parse_args.logginglevel])
 
-    if parse_args.loggingtofile:
-        fh = logging.FileHandler("BugChecker.log")
-        fh.setFormatter(formatter)
-        _logger.addHandler(fh)
+                formatter = logging.Formatter(
+                    "%(asctime)s - %(threadName)s -  %(name)s - %(levelname)s - %(message)s")
 
-    sh = logging.StreamHandler(sys.stdout)
-    sh.setFormatter(formatter)
-    _logger.addHandler(sh)
+                if parse_args.loggingtofile:
+                    fh = logging.FileHandler("BugChecker.log")
+                    fh.setFormatter(formatter)
+                    _logger.addHandler(fh)
 
-    # get list of devices
-    device_list = read_csv("devices.csv", creds)
+                sh = logging.StreamHandler(sys.stdout)
+                sh.setFormatter(formatter)
+                _logger.addHandler(sh)
 
-    # check each device
-    checked_devices = main(device_list, parse_args.bugid, parse_args.workerthreads)
+                # get list of devices
+                device_list = read_csv("devices.csv", creds)
 
-    # write results to csv file
-    write_csv(parse_args.outputcsv, parse_args.bugid, checked_devices)
+                # check each device
+                checked_devices = main(device_list, parse_args.bugid, parse_args.workerthreads)
+
+                # write results to csv file
+                write_csv(parse_args.outputcsv, parse_args.bugid, checked_devices)
