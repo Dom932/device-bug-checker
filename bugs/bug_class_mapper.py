@@ -7,15 +7,8 @@ class BugClassMapper:
     Class to map a bug to a bug class
     """
 
-    _bug_class_mapper = {
-
-        #"testbug": TestBug,
-        "cscvg76186": CSCvg76186
-
-    }
-
-    @classmethod
-    def get_bug_class(cls, bug_list=None):
+    @staticmethod
+    def get_bug_class(bug_list=None):
         """
         Returns bug class based on bug_id. If no bug_id is specified all Bug Classes will be returned
 
@@ -24,6 +17,12 @@ class BugClassMapper:
         :return: bug class
         :raises KeyError: If bug_id is not contained in class mapper
         """
+        bug_class_mapper = {
+
+            "testbug": TestBug,
+            "cscvg76186": CSCvg76186
+
+        }
 
         return_classes = []
 
@@ -35,7 +34,7 @@ class BugClassMapper:
 
             for b in bug_list:
                 try:
-                    return_classes.append(cls._bug_class_mapper[b.lower()])
+                    return_classes.append(bug_class_mapper[b.lower()])
 
                 except KeyError as e:
                     raise e
@@ -43,4 +42,4 @@ class BugClassMapper:
             return return_classes
 
         else:
-            return list(cls._bug_class_mapper.values())
+            return list(bug_class_mapper.values())
