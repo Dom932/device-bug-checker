@@ -2,10 +2,14 @@ from bugs.base_bug import BaseBug
 
 
 class CSCvg76186(BaseBug):
-
     """
+    CSCvg76168 Bug Check
 
-    CVSS Score: 9.8 (Critical)
+    This bug check is intended to check a Cisco switch to determine if the Cisco Smart Install
+    feature is enabled which indicates if the device is vulnerable to CSCvg76168 (CVSS Score: 9.8
+    (Critical).
+
+    Please call get_description() for nor infoamtion.
 
     Notes:
         Please review and understand the code before running it on any device.
@@ -20,16 +24,16 @@ class CSCvg76186(BaseBug):
         :return: str - Description of bug
         """
         desc = "Cisco Smart Install is a feature in Cisco IOS and OIS XE software that provides plug and play " \
-               "configuration and image management for zero touch deployment of new equipment. \n A " \
+               "configuration and image management for zero touch deployment of new equipment. \n\nA " \
                "vulnerablility in the Smar Instll feature could allow an attacker to trigger a reload of a " \
                "device or execute arbitrary code. This attack is possible due to improper validation of packet " \
                "data. In order to exploit this vulnerablity, an attacker would create a Smart Install message " \
-               "to an vulnerable device on port tcp/4786, which could cause a buffer overflow. \n  This bug " \
+               "to an vulnerable device on port tcp/4786, which could cause a buffer overflow. \n\nThis bug " \
                "check works by checking the output of 'show vstack config' to determin if the Smart Install " \
                "feature is enabled (which it is by default). Note this bug check does not currently check IOS " \
                "version comparison and the output is only to indicate if a device might be affected (ie a " \
                "upgraded IOS version (with the bug fix) with Smart Install enable would be marked as affected, " \
-               "Please check the IOS version). \n CVSS Score: 9.8 (Critical)"
+               "Please check the IOS version). \n\nCVSS Score: 9.8 (Critical)"
 
         return desc
 
