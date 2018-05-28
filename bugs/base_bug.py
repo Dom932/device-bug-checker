@@ -10,13 +10,21 @@ class BaseBug(ABC):
     # Name tuple which is returned to indicate if a device is affected by a bug
     Bug = namedtuple("Bug", "impacted output")
 
+    @staticmethod
     @abstractmethod
-    def check_bug(self, **kwargs):
+    def bug_description():
         """
-        Abstract method to check if a device is susceptible to a bug
-        :param kwargs: arguments required for check_bug
-        :type kwargs:
-        :return: namedtuple - Bug(impacted(bool) output(str))
+        Get information regarding the bug
+        :return: str - Description of bug
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def bug_source():
+        """
+        Get source of bug infornamtion
+        :return: str - URL to the source information
         """
         pass
 
@@ -79,6 +87,15 @@ class BaseBug(ABC):
         """
         pass
 
+    @abstractmethod
+    def check_bug(self, **kwargs):
+        """
+        Abstract method to check if a device is susceptible to a bug
+        :param kwargs: arguments required for check_bug
+        :type kwargs:
+        :return: namedtuple - Bug(impacted(bool) output(str))
+        """
+        pass
 
     @abstractmethod
     def remediate_bug(self):
@@ -87,3 +104,5 @@ class BaseBug(ABC):
         :return: bool if bug was remediated
         """
         pass
+
+
