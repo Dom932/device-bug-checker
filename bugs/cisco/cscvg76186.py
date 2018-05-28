@@ -5,10 +5,7 @@ class CSCvg76186(BaseBug):
 
     """
 
-    Cisco Bug ID: CSCvg76186
-    Advisory ID: CVE-2018-0171
     CVSS Score: 9.8 (Critical)
-    Reference: https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20180328-smi2
 
     Notes:
         Please review and understand the code before running it on any device.
@@ -32,7 +29,7 @@ class CSCvg76186(BaseBug):
                "feature is enabled (which it is by default). Note this bug check does not currently check IOS " \
                "version comparison and the output is only to indicate if a device might be affected (ie a " \
                "upgraded IOS version (with the bug fix) with Smart Install enable would be marked as affected, " \
-               "Please check the IOS version). "
+               "Please check the IOS version). \n CVSS Score: 9.8 (Critical)"
 
         return desc
 
@@ -45,12 +42,29 @@ class CSCvg76186(BaseBug):
         return "https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20180328-smi2"
 
     @staticmethod
-    def bug_id():
+    def manufacture_bug_id():
         """
         Returns the cisco Bug ID this class checks for
         :return: str - Bug ID
         """
         return "CSCvg76186"
+
+    @staticmethod
+    def cve_id():
+        """
+        Get the Common Vulnerabilities and Exposure (CVE) ID
+        :return: CSV ID or None if there is not one
+        """
+        return "CVE-2018-0171"
+
+    @staticmethod
+    def bug_severity():
+        """
+        Get the severity of the bug, based on manufacture scoring.
+        Critical, Warning, Error, Informational, Minimal
+        :return: The bug severity
+        """
+        return "Critical"
 
     @staticmethod
     def requirements():
@@ -76,7 +90,6 @@ class CSCvg76186(BaseBug):
         :return: bool
         """
         return False
-
 
     @staticmethod
     def affected_devices():

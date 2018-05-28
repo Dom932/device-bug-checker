@@ -48,6 +48,16 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
+    def bug_severity():
+        """
+        Get the severity of the bug, based on manufacture scoring.
+        Critical, Warning, Error, Informational, Minimal
+        :return: The bug severity
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
     def requirements(self):
         """
         Requirements for this bug check to check the bug. These will be passed as kwargs to to
