@@ -1,6 +1,8 @@
 from devices.autodetect import AutoDetect
 from devices.base_device import BaseDevice
 from devices.cisco import CiscoIOS
+from devices.cisco import CiscoIOSSSHTelnet
+from devices.cisco import CiscoIOSTelnet
 from devices.cisco import CiscoWLC
 from devices.cisco import CiscoASA
 from devices.cisco import CiscoNXOS
@@ -26,9 +28,12 @@ class DeviceClassMapper:
             'BaseDevice': BaseDevice,
             'AutoDetect': AutoDetect,
             'CiscoIOS': CiscoIOS,
+            'CiscoIOSSSHTelnet': CiscoIOSSSHTelnet,
+            'CiscoIOSTelnet': CiscoIOSTelnet,
             'CiscoWLC': CiscoWLC,
             'CiscoASA': CiscoASA,
-            'CiscoNXOS': CIscoNXOS,
+            'CiscoNXOS': CiscoNXOS,
+
             'Linux': Linux
         }
 
