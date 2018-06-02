@@ -178,7 +178,7 @@ class BaseDevice(ABC):
                         device_type = self.device_type
 
                         # Convert device type to a list.
-                        if isinstance(device_type, dict):
+                        if isinstance(device_type, tuple):
                             device_type = [device_type]
 
                         # loop through each device_type attempting to connect.
