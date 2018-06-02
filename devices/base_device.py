@@ -175,28 +175,37 @@ class BaseDevice(ABC):
                             # if no secret then remove it
                             device.pop("secret", None)
 
-                        device["device_type"] = self.device_type
+                        device_type = self.device_type
 
-                        try:
-                            self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
-                                               f"device type: {self.device_type}")
-                            self.connection = ConnectHandler(**device)
-                            self.hostname
-                            self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
-                            self.version
-                            self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
-                            self._logger.info(f"{self.ipaddr} - Connection established")
-                            return None
+                        # Convert device type to a list.
+                        if isinstance(device_type, dict):
+                            device_type = [device_type]
 
-                        except NetMikoAuthenticationException:
-                            # ignore except - unable to connect based on current User/pass type combo
-                            # Move onto next set
-                            self._logger.debug(f"{self.ipaddr} - Current username/password incorrect")
-                            pass
-                        except NetMikoTimeoutException as e:
-                            # unable to connect to device
-                            self._logger.info(f"{self.ipaddr} - Connection timeout")
-                            raise e
+                        # loop through each device_type attempting to connect.
+                        for dt in device_type:
+
+                            device["device_type"] = dt
+
+                            try:
+                                self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
+                                                   f"device type: {dt}")
+                                self.connection = ConnectHandler(**device)
+                                self.hostname
+                                self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")
+                                self.version
+                                self._logger.debug(f"{self.ipaddr} - Version: {self.version}")
+                                self._logger.info(f"{self.ipaddr} - Connection established")
+                                return None
+
+                            except NetMikoAuthenticationException:
+                                # ignore except - unable to connect based on current User/pass type combo
+                                # Move onto next set
+                                self._logger.debug(f"{self.ipaddr} - Current username/password incorrect")
+                                pass
+                            except NetMikoTimeoutException as e:
+                                # unable to connect to device
+                                self._logger.info(f"{self.ipaddr} - Connection timeout")
+                                raise e
 
                     # If this point is reached no connection was established
                     self._logger.error(f"{self.ipaddr} - Unable to connect to device")
