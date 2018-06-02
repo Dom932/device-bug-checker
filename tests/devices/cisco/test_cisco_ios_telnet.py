@@ -1,6 +1,7 @@
 import pytest
 
 from devices import BaseDevice
+from devices.cisco import BaseCisco
 from devices.cisco import CiscoIOSTelnet
 
 cred = {'hostname': 'u', 'password': 'p', 'secret': 's'}
@@ -67,6 +68,7 @@ class TestCiscoIOS:
     def test_instance(self, device):
         """ Test device object type """
         assert isinstance(device, CiscoIOSTelnet)
+        assert isinstance(device, BaseCisco)
         assert isinstance(device, BaseDevice)
 
     def test_init(self, device):

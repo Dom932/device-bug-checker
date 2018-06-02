@@ -1,6 +1,7 @@
 import pytest
 
 from devices import BaseDevice
+from devices.cisco import BaseCisco
 from devices.cisco import CiscoWLC
 
 cred = {'username': 'u', 'password': 'p', 'secret': 's'}
@@ -63,6 +64,7 @@ class TestCiscoIOS:
     def test_instance(self, device):
         """ Test device object type """
         assert isinstance(device, CiscoWLC)
+        assert isinstance(device, BaseCisco)
         assert isinstance(device, BaseDevice)
 
     def test_init(self, device):

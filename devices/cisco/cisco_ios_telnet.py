@@ -1,4 +1,3 @@
-import re
 from devices.cisco import CiscoIOS
 
 class CiscoIOSTelnet(CiscoIOS):

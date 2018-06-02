@@ -1,23 +1,14 @@
 import re
-from devices.base_device import BaseDevice
+from devices.cisco import BaseCisco
 
 
-class CiscoWLC(BaseDevice):
+class CiscoWLC(BaseCisco):
     """
     Class to represent Cisco WLC device
     """
 
     def __init__(self, **kwargs):
         super(CiscoWLC, self).__init__(**kwargs)
-
-    @property
-    def manufacture(self):
-        """
-        Returns manufacture of device
-        :param self:
-        :return str
-        """
-        return "cisco"
 
     @property
     def device_type(self):
@@ -46,58 +37,22 @@ class CiscoWLC(BaseDevice):
 
             config = self.connection.send_command("sh sysinfo")
 
-            rexp = r"Product Version.................................. ?(.*)\n"
-            output = re.search(rexp, config)
+            output = re.search(self._get_version_regex(), config)
 
             if output:
-                self.version = output.group(1)
+                self._version = output.group(1)
             else:
-                self.version = "Unable to determine IOS version"
+                self._version = "Unable to determine IOS version"
 
             if reqs_disconnect:
                 self.disconnect()
 
             return self._version
 
-    @version.setter
-    def version(self, version):
+    def _get_version_regex(self):
         """
-        Set Device OS version
-        :param version: OS version
-        :type version: str
-        :return:
+        Returns the regular expression string required for the version property to determin the Cisco IOS version from
+        a show version output
+        :return: Regular expression string
         """
-        self._version = version
-
-    @property
-    def hostname(self):
-        """
-        Get hostname set of device
-        :return: str
-        """
-        if self._hostname:
-            return self._hostname
-        else:
-            reqs_disconnect = False
-
-            if not self.connection:
-                self.connect()
-                reqs_disconnect = True
-
-            hostname = self.connection.find_prompt()
-            self.hostname = hostname[0:(len(hostname) - 1)]
-
-            if reqs_disconnect:
-                self.disconnect()
-
-            return self._hostname
-
-    @hostname.setter
-    def hostname(self, hostname):
-        """
-        Set hostname
-        :param hostname: Hostname of the device
-        :type hostname: str
-        :return:
-        """
-        self._hostname = hostname
+        return r"Product Version.................................. ?(.*)"
