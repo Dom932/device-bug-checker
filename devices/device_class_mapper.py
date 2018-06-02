@@ -3,6 +3,7 @@ from devices.base_device import BaseDevice
 from devices.cisco import CiscoIOS
 from devices.cisco import CiscoWLC
 from devices.cisco import CiscoASA
+from devices.cisco import CiscoNXOS
 from devices.linux import Linux
 
 
@@ -27,6 +28,7 @@ class DeviceClassMapper:
             'CiscoIOS': CiscoIOS,
             'CiscoWLC': CiscoWLC,
             'CiscoASA': CiscoASA,
+            'CiscoNXOS': CIscoNXOS,
             'Linux': Linux
         }
 
