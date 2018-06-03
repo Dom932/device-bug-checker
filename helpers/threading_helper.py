@@ -66,4 +66,3 @@ class ThreadingHelper:
             t.start()
         self.input_queue.join()
         return list(self.output_queue.queue)
-

@@ -8,7 +8,6 @@ class BaseCisco(BaseDevice):
     Class to represent base Cisco device
     """
 
-
     def __init__(self, **kwargs):
         super(BaseCisco, self).__init__(**kwargs)
 
@@ -38,8 +37,8 @@ class BaseCisco(BaseDevice):
                 reqs_disconnect = True
 
             config = self.connection.send_command("sh ver")
-
-            output = re.search(self._get_version_regex(), config)
+            regex = self._get_version_regex()
+            output = re.search(regex, config)
 
             if output:
                 self._version = output.group(1)
@@ -97,7 +96,7 @@ class BaseCisco(BaseDevice):
     @abstractmethod
     def _get_version_regex(self):
         """
-        Returns the regular expression string required for the version property to determin the Cisco IOS version from
+        Returns the regular expression string required for the version property to determine the Cisco IOS version from
         a show version output
         :return: Regular expression string
         """

@@ -46,7 +46,7 @@ def device():
         def send_command(self, command):
             if command.lower() == "sh ver":
                 return sh_ver_output1
-            else :
+            else:
                 return None
 
     d = CiscoASA(**init)
@@ -102,7 +102,7 @@ class TestCiscoASA:
         """ Test version attribute """
         device._version = None
         assert device.version == "8.4(1.11)"
-        device._version = '1.1.1'
+        device._version = "1.1.1"
         assert device.version == "1.1.1"
 
     def test_hostname(self, device):

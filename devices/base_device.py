@@ -91,7 +91,7 @@ class BaseDevice(ABC):
         Check a bug against the device. The outcome will be added to the device object bug property
         :param bug_check_obj:
         :type bug_check_obj: BaseDeviceChecker
-        :return bool: idicates if the device is inpacted by the bug
+        :return bool: indicates if the device is impacted by the bug
         :raises ValueError: If a unknown object is passed
         """
 

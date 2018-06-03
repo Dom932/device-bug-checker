@@ -3,7 +3,7 @@ import pytest
 from devices import BaseDevice
 from devices.autodetect import AutoDetect
 
-cred = {'username':'u', 'password':'p', 'secret': 's'}
+cred = {'username': 'u', 'password': 'p', 'secret': 's'}
 
 init = {
     'ipaddr': '192.168.254.4',
@@ -84,12 +84,11 @@ class TestAutoDetect:
 
     def test_enable_mode(self, device):
         """ Test entering / existing enable mode"""
-        assert device.check_enable_mode() == False
+        assert device.check_enable_mode() is False
         device.enter_enable_mode()
-        assert device.check_enable_mode() == True
+        assert device.check_enable_mode() is True
         device.exit_enable_mode()
-        assert device.check_enable_mode() == False
-
+        assert device.check_enable_mode() is False
 
     def test_version(self, device):
         """ Test version attribute """

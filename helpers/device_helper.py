@@ -1,6 +1,5 @@
 import getpass
 import logging
-import re
 from datetime import datetime
 from pathlib import Path
 
@@ -54,7 +53,6 @@ class DeviceHelper:
                         return credential_set
                     else:
                         break
-
 
     @staticmethod
     def backup_config(config, location, hostname):

@@ -30,7 +30,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def manufacture_bug_id(self):
+    def manufacture_bug_id():
         """
         Returns the manufacture bug ID
         :return: str - Bug ID
@@ -58,7 +58,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def requirements(self):
+    def requirements():
         """
         Requirements for this bug check to check the bug. These will be passed as kwargs to to
         bug checker function.
@@ -72,7 +72,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def manufacture(self):
+    def manufacture():
         """
         Returns which manufacture this device bug affects
         :return: str
@@ -81,7 +81,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def enable_mode_required(self):
+    def enable_mode_required():
         """
         Returns if enable mode is required for the bug check
         :return: bool
@@ -89,7 +89,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def affected_devices(self):
+    def affected_devices():
         """
         Return list devices types which are affected by this put
         ["Switch","Router","Firewall","AP"]
@@ -99,7 +99,7 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def remediate_implimented(self):
+    def remediate_implemented():
         """
         Check if remediate function implemented
         :return: bool
@@ -119,9 +119,7 @@ class BaseBug(ABC):
     @abstractmethod
     def remediate_bug(self):
         """
-        Abstract method to resolve the bug. Thorws NotImplemented if bug fix code is not implmented
+        Abstract method to resolve the bug. Throws NotImplemented if bug fix code is not implemented
         :return: bool if bug was remediated
         """
         pass
-
-

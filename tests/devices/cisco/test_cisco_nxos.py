@@ -13,12 +13,13 @@ init = {
     'version': '1.0'
 }
 
-sh_ver_output1 = "Software\n  BIOS:      version 1.2.0\n  loader:    version N/A\n  kickstart: version 6.0(2)U2(5)\n  " \
-                 "system:    version 6.0(2)U2(5)\n  Power Sequencer Firmware:\n             Module 1: version v4.4\n  " \
-                 "BIOS compile time:       08/25/2011\n  kickstart image file is: " \
+sh_ver_output1 = "Software\n  BIOS:      version 1.2.0\n  loader:    version N/A\n  kickstart: version 6.0(2)U2(5)\n " \
+                 " system:    version 6.0(2)U2(5)\n  Power Sequencer Firmware:\n             Module 1: version v4.4\n" \
+                 "  BIOS compile time:       08/25/2011\n  kickstart image file is: " \
                  "bootflash:///n3000-uk9-kickstart.6.0.2.U2.5.bin\n  kickstart compile time:  5/8/2014 16:00:00 [" \
                  "05/09/2014 03:38:26]\n  system image file is:    bootflash:///n3000-uk9.6.0.2.U2.5.bin\n  system " \
                  "compile time:     5/8/2014 16:00:00 [05/09/2014 05:30:06]\n "
+
 
 @pytest.fixture
 def device():
@@ -49,7 +50,7 @@ def device():
         def send_command(self, command):
             if command.lower() == "sh ver":
                 return sh_ver_output1
-            else :
+            else:
                 return None
 
     d = CiscoNXOS(**init)

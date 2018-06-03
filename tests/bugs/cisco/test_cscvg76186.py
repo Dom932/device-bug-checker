@@ -2,18 +2,19 @@ import pytest
 
 from bugs.cisco import CSCvg76186
 
-unaffected_output1 = 'Role: Client (SmartInstall Disabled)'
-unaffected_output2 = 'Capability: Client\nOper Mode: Disabled\nRole: NA'
+unaffected_output1 = "Role: Client (SmartInstall Disabled)"
+unaffected_output2 = "Capability: Client\nOper Mode: Disabled\nRole: NA"
 
-affected_output1 = 'Role: Client (SmartInstall enabled)'
-affected_output2 = 'Capability: Client\nOper Mode: Enabled\nRole: Client'
+affected_output1 = "Role: Client (SmartInstall enabled)"
+affected_output2 = "Capability: Client\nOper Mode: Enabled\nRole: Client"
 
-not_supported = 'Command not supported on platform'
+not_supported = "Command not supported on platform"
 
 
 @pytest.fixture()
 def bug():
     return CSCvg76186()
+
 
 @pytest.fixture()
 def mock_connection():
@@ -42,23 +43,23 @@ class TestCSCvg76186:
         assert isinstance(bug, CSCvg76186)
         assert isinstance(bug, CSCvg76186)
 
-    def test_bug_description(self, bug):
+    def test_bug_description(self):
         """ Test bug_description method. Note only tests that result is not null"""
         assert CSCvg76186.bug_description() is not None
 
-    def test_bug_reference(self, bug):
+    def test_bug_reference(self):
         """ Test bug_reference method. Note only tests that result is not null"""
         assert CSCvg76186.bug_reference() is not None
 
-    def test_manufacture_bug_id(self, bug):
+    def test_manufacture_bug_id(self):
         """ Test manufacture_bug_id method """
-        assert CSCvg76186.manufacture_bug_id() == 'CSCvg76186'
+        assert CSCvg76186.manufacture_bug_id() == "CSCvg76186"
 
-    def test_cve_id(self, bug):
+    def test_cve_id(self):
         """ Test cve_id method """
         assert CSCvg76186.cve_id() == "CVE-2018-0171"
 
-    def test_bug_severity(self, bug):
+    def test_bug_severity(self):
         """ Tesht bug_severity method"""
         assert CSCvg76186.bug_severity() == "Critical"
 
@@ -66,21 +67,21 @@ class TestCSCvg76186:
         """ Test requirements method """
         assert CSCvg76186.requirements() == ['connection']
 
-    def test_manufacture(self, bug):
+    def test_manufacture(self):
         """ Test manufacture method """
-        assert CSCvg76186.manufacture() == 'Cisco'
+        assert CSCvg76186.manufacture() == "Cisco"
 
-    def test_enable_mode_required(self,bug):
+    def test_enable_mode_required(self):
         """ Test if enable_mode_required method """
         assert CSCvg76186.enable_mode_required() is False
 
-    def test_affected_devices(self, bug):
+    def test_affected_devices(self):
         """ Test affected_devices method """
         assert CSCvg76186.affected_devices() == ['Switch']
 
-    def test_remediate_implimented(self, bug):
+    def test_remediate_implimented(self):
         """ Test remediate_implemented method """
-        assert CSCvg76186.remediate_implimented() is False
+        assert CSCvg76186.remediate_implemented() is False
 
     def test_check_bug_unaffected1(self, bug, mock_connection):
         """ Test check_bug method with an unaffected device """
@@ -107,7 +108,7 @@ class TestCSCvg76186:
         assert result.impacted is True
 
     def test_check_bug_command_not_supported(self, bug, mock_connection):
-        """ Check check_bug method output returns not suported when it is unable to get vstack output"""
+        """ Check check_bug method output returns not supported when it is unable to get vstack output"""
         result = bug.check_bug(mock_connection)
         assert result.impacted is False
         assert result.output == not_supported

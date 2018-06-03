@@ -39,7 +39,6 @@ class Linux(BaseDevice):
         else:
             reqs_disconnect = False
 
-
             if not self.connection:
                 self.connect()
                 reqs_disconnect = True

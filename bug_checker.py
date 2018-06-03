@@ -147,6 +147,7 @@ def write_csv(output_file, bug_list, devices):
 
             wr.writerow(row)
 
+
 def print_bug_detail(bug_list):
     """
     Print out bug details
@@ -166,28 +167,29 @@ def print_bug_detail(bug_list):
         print(f"Bug Reference: {b.bug_reference()}")
         print(f"Bug Severity: {b.bug_severity()}")
         print(f"Bug Description: \n{b.bug_description()}")
-        print(f"Remediate Implimented: {b.remediate_implimented()}")
+        print(f"Remediate Implimented: {b.remediate_implemented()}")
         print(f"Affected Devices: {b.affected_devices()}")
         print(f"Enable Mode required: {b.enable_mode_required()}")
-
 
 
 def print_bug_summary():
 
     print("-" * 115)
     print(f"| {'Manufacture':^13} | {'Bug ID':^13} | {'CVE ID':^15} | {'Severity':^10} | {'Affected':^15} | {'Enable Mode':^13} | {'Remediate':^14} |")
-    print(f"| {'':^13} | {'':^13} | {'':^15} | {'':^10} | {'Devices':^15} | {'Required':^13} | {'Implimented':^14} |")
+    print(f"| {'':^13} | {'':^13} | {'':^15} | {'':^10} | {'Devices':^15} | {'Required':^13} | {'Implemented':^14} |")
     print("-" * 115)
 
     for b in BugClassMapper.get_bug_class():
         affected_devices = b.affected_devices()
-        print(f"| {b.manufacture():^13} | {b.manufacture_bug_id():^13} | {b.cve_id():^15} | {b.bug_severity():^10} | {affected_devices[0]:^15} | {b.enable_mode_required():^13} | {b.remediate_implimented():^14} |")
+        print(
+            f"| {b.manufacture():^13} | {b.manufacture_bug_id():^13} | {b.cve_id():^15} | {b.bug_severity():^10} | {affected_devices[0]:^15} | {b.enable_mode_required():^13} | {b.remediate_implemented():^14} |")
 
         for a in affected_devices[1:len(affected_devices)]:
             print(
                 f"| {'':^13} | {'':^13} | {'':^15} | {'':^10} | {a:^15} | {'':^13} | {'':^14} |")
 
         print("-" * 115)
+
 
 if __name__ == "__main__":
 
@@ -206,7 +208,7 @@ if __name__ == "__main__":
     parse.add_argument("-o", "--outputcsv", type=str,
                        help="Location where output CSV should be writen")
 
-    parse.add_argument("-s","--bugsummary", action="store_true",
+    parse.add_argument("-s", "--bugsummary", action="store_true",
                        help="Prints a summary of all bugs")
 
     parse.add_argument("--workerthreads", type=int, default=4,
@@ -224,9 +226,9 @@ if __name__ == "__main__":
         print("Bug Checker requires either -c or -l to be set")
     else:
         if parse_args.listbugdetails:
-           if not (parse_args.bugid or parse_args.bugsummary):
-               print("If -l is spesified, --bugid or --bugsummary are required")
-           else:
+            if not (parse_args.bugid or parse_args.bugsummary):
+                print("If -l is spesified, --bugid or --bugsummary are required")
+            else:
                if parse_args.bugid:
                    print_bug_detail(parse_args.bugid)
                elif parse_args.bugsummary:

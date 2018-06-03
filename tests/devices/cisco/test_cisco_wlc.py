@@ -21,7 +21,6 @@ wlc_sysinfo = "Manufacturer's Name.............................. Cisco Systems I
 
 
 
-
 @pytest.fixture
 def device():
     class MockConnection:
@@ -97,11 +96,11 @@ class TestCiscoIOS:
 
     def test_enable_mode(self, device):
         """ Test entering / existing enable mode"""
-        assert device.check_enable_mode() == False
+        assert device.check_enable_mode() is False
         device.enter_enable_mode()
-        assert device.check_enable_mode() == True
+        assert device.check_enable_mode() is True
         device.exit_enable_mode()
-        assert device.check_enable_mode() == False
+        assert device.check_enable_mode() is False
 
     def test_version(self, device):
         """ Test version attribute """

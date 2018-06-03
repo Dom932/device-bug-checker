@@ -13,17 +13,17 @@ init = {
     'version': '1.0'
 }
 
-sh_ver_output1 = 'Cisco IOS Software, 3600 Software (C3660-I-M), Version 12.3(4)T\nTAC Support: ' \
-                'http://www.cisco.com/tac\nCopyright (c) 1986-2003 by Cisco Systems, Inc.\nCompiled Thu 18-Sep-03 ' \
-                '15:37 by ccai\n\nROM: System Bootstrap, Version 12.0(6r)T, RELEASE SOFTWARE (fc1)\nROM: \n\nC3660-1 ' \
-                'uptime is 1 week, 3 days, 6 hours, 41 minutes\nSystem returned to ROM by power-on\nSystem image file ' \
-                'is "slot0:tftpboot/c3660-i-mz.123-4.T"\n\nCisco 3660 (R527x) processor (revision 1.0) with ' \
-                '57344K/8192K bytes of memory.\nProcessor board ID JAB000000FF\nR527x CPU at 225Mhz, Implementation ' \
-                '40, Rev 10.0, 2048KB L2 Cache\n\n3660 Chassis type: ENTERPRISE\n2 FastEthernet interfaces\n4 Serial ' \
-                'interfaces\nDRAM configuration is 64 bits wide with parity disabled.\n125K bytes of NVRAM.\n16384K ' \
-                'bytes of processor board System flash (Read/Write)\n\nFlash card inserted. Reading ' \
-                'filesystem...done.\n20480K bytes of processor board PCMCIA Slot0 flash (Read/Write)\n\nConfiguration ' \
-                'register is 0x2102\n '
+sh_ver_output1 = "Cisco IOS Software, 3600 Software (C3660-I-M), Version 12.3(4)T\nTAC Support: " \
+                "http://www.cisco.com/tac\nCopyright (c) 1986-2003 by Cisco Systems, Inc.\nCompiled Thu 18-Sep-03 " \
+                "15:37 by ccai\n\nROM: System Bootstrap, Version 12.0(6r)T, RELEASE SOFTWARE (fc1)\nROM: \n\nC3660-1 " \
+                "uptime is 1 week, 3 days, 6 hours, 41 minutes\nSystem returned to ROM by power-on\nSystem image file" \
+                "is 'slot0:tftpboot/c3660-i-mz.123-4.T'\n\nCisco 3660 (R527x) processor (revision 1.0) with " \
+                "57344K/8192K bytes of memory.\nProcessor board ID JAB000000FF\nR527x CPU at 225Mhz, Implementation " \
+                "40, Rev 10.0, 2048KB L2 Cache\n\n3660 Chassis type: ENTERPRISE\n2 FastEthernet interfaces\n4 Serial " \
+                "interfaces\nDRAM configuration is 64 bits wide with parity disabled.\n125K bytes of NVRAM.\n16384K " \
+                "bytes of processor board System flash (Read/Write)\n\nFlash card inserted. Reading " \
+                "filesystem...done.\n20480K bytes of processor board PCMCIA Slot0 flash (Read/Write)\n\nConfiguration" \
+                "register is 0x2102\n "
 
 
 @pytest.fixture
@@ -55,7 +55,7 @@ def device():
         def send_command(self, command):
             if command.lower() == "sh ver":
                 return sh_ver_output1
-            else :
+            else:
                 return None
 
     d = CiscoIOSTelnet(**init)
@@ -111,7 +111,7 @@ class TestCiscoIOS:
         """ Test version attribute """
         device._version = None
         assert device.version == "12.3(4)T"
-        device._version = '1.1.1'
+        device._version = "1.1.1"
         assert device.version == "1.1.1"
 
     def test_hostname(self, device):

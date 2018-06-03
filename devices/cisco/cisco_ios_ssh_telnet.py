@@ -16,4 +16,4 @@ class CiscoIOSSSHTelnet(CiscoIOS):
         :param self:
         :return tuple:
         """
-        return 'cisco_ios','cisco_ios_telnet'
+        return 'cisco_ios', 'cisco_ios_telnet'

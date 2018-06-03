@@ -1,5 +1,6 @@
 from devices.cisco import CiscoIOS
 
+
 class CiscoIOSTelnet(CiscoIOS):
     """
     Class to represent Cisco IOS device
@@ -7,7 +8,6 @@ class CiscoIOSTelnet(CiscoIOS):
 
     def __init__(self, **kwargs):
         super(CiscoIOSTelnet, self).__init__(**kwargs)
-
 
     @property
     def device_type(self):

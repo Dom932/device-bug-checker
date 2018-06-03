@@ -30,10 +30,10 @@ class TestBug(BaseBug):
         ["Switch","Router","Firewall","AP"]
         :return: list
         """
-        return ["Switch","Router","Firewall","AP"]
+        return ["Switch", "Router", "Firewall", "AP"]
 
     @property
-    def remediate_implimented(self):
+    def remediate_implemented(self):
         """
         Check if remediate function implemented
         :return: bool
