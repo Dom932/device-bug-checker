@@ -38,6 +38,9 @@ def check_bug(device, bug_list):
     except ConnectionException as e:
         device.connection_error = e
 
+    except ValueError as e:
+        device.connection_error = e
+
     finally:
         return device
 

@@ -58,15 +58,24 @@ class BaseBug(ABC):
 
     @staticmethod
     @abstractmethod
-    def requirements():
+    def connection_requirements():
         """
-        Requirements for this bug check to check the bug. These will be passed as kwargs to to
+        Connection requirements for this bug check to check the bug. These will be passed as kwargs to to
         bug checker function.
 
         Current support values are:
             ip_address - IP address of device
             connection - netmiko.ConnectionHandler connection to the device
         :return: list of requirements
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def device_type_requirements():
+        """
+        Get the device type which this bug can be checked against
+        :return: list of device types
         """
         pass
 

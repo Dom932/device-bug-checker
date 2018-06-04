@@ -97,40 +97,50 @@ class BaseDevice(ABC):
 
         if isinstance(bug_check_obj, BaseBug):
 
-            # Get list of requirements
-            requirements = bug_check_obj.requirements
-            self._logger.debug(f"{self.ipaddr} - Bug {bug_check_obj.bug_id} requirements: {requirements}")
+            device_type_reqirements = bug_check_obj.device_type_requirements()
+            self._logger.debug(
+                f"{self.ipaddr} - Bug {bug_check_obj.bug_id} device type requirements: {device_type_reqirements}")
+            self._logger.debug(
+                f"{self.ipaddr} - Device type: {self.device_type}")
 
-            kwargs = {}
+            if self.device_type in device_type_reqirements:
 
-            if 'connection' in requirements:
-                # connection required and connection is not established
-                if not self.check_connection():
-                    self.connect()
-                kwargs['connection'] = self.connection
-            if 'ip_address' in requirements:
-                kwargs['ip_address'] = self.ipaddr
+                # Get list of requirements
+                connection_requirements = bug_check_obj.connection_requirements()
+                self._logger.debug(f"{self.ipaddr} - Bug {bug_check_obj.bug_id} connection requirements: {connection_requirements}")
 
-            self._logger.debug(f"{self.ipaddr} - Checking if connection is established")
-            if self.check_connection():
+                kwargs = {}
 
-                self._logger.debug(f"{self.ipaddr} - Connection is established")
+                if 'connection' in connection_requirements:
+                    # connection required and connection is not established
+                    if not self.check_connection():
+                        self.connect()
+                    kwargs['connection'] = self.connection
+                if 'ip_address' in connection_requirements:
+                    kwargs['ip_address'] = self.ipaddr
 
-                result = bug_check_obj.check_bug(**kwargs)
-                bug_id = bug_check_obj.bug_id
-                self.bugs[bug_id] = result
+                self._logger.debug(f"{self.ipaddr} - Checking if connection is established")
+                if self.check_connection():
 
-                self._logger.debug(f"{self.ipaddr} - Bug ID: {bug_id} Result: {result}")
+                    self._logger.debug(f"{self.ipaddr} - Connection is established")
 
-                if result.impacted:
-                    return True
+                    result = bug_check_obj.check_bug(**kwargs)
+                    bug_id = bug_check_obj.bug_id
+                    self.bugs[bug_id] = result
+
+                    self._logger.debug(f"{self.ipaddr} - Bug ID: {bug_id} Result: {result}")
+
+                    if result.impacted:
+                        return True
+                    else:
+                        return False
+
                 else:
-                    return False
-
+                    self._logger.error(f"{self.ipaddr} - No connection to device established")
+                    raise ConnectionException("No connection to device established")
             else:
-                self._logger.error(f"{self.ipaddr} - No connection to device established")
-                raise ConnectionException("No connection to device established")
-
+                self._logger.error(f"{self.ipaddr} - Device Type ({self.device_type}) do not match bug requirements")
+                raise ValueError(f"Bug check is not supported on device type: {self.device_type}")
         else:
             self._logger.error(f"{self.ipaddr} - Incorrect Object")
             raise ValueError('Incorrect Object passed. Must be of an instance of  BaseBug')

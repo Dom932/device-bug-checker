@@ -1,6 +1,7 @@
 from bugs.base_bug import BaseBug
 
 
+
 class CSCvg76186(BaseBug):
     """
     CSCvg76168 Bug Check
@@ -71,12 +72,21 @@ class CSCvg76186(BaseBug):
         return "Critical"
 
     @staticmethod
-    def requirements():
+    def connection_requirements():
         """
-        Requirements for check_bug
+        Connection requirements for this bug check to check the bug. These will be passed as kwargs to to
+        bug checker function.
         :return:
         """
         return ["connection"]
+
+    @staticmethod
+    def device_type_requirements():
+        """
+        Get the device type which this bug can be checked against
+        :return: list of device types
+        """
+        return ['cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet']
 
     @staticmethod
     def manufacture():

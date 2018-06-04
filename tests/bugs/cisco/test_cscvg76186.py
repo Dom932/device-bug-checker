@@ -1,6 +1,7 @@
 import pytest
 
 from bugs.cisco import CSCvg76186
+from devices.cisco import CiscoIOS
 
 unaffected_output1 = "Role: Client (SmartInstall Disabled)"
 unaffected_output2 = "Capability: Client\nOper Mode: Disabled\nRole: NA"
@@ -63,9 +64,13 @@ class TestCSCvg76186:
         """ Tesht bug_severity method"""
         assert CSCvg76186.bug_severity() == "Critical"
 
-    def test_requirements(self):
-        """ Test requirements method """
-        assert CSCvg76186.requirements() == ['connection']
+    def test_connection_requirements(self):
+        """ Test connection_requirements method """
+        assert CSCvg76186.connection_requirements() == ['connection']
+
+    def test_device_type_requirements(self):
+        """ Test device_type_requirements method"""
+        assert CSCvg76186.device_type_requirements() == ['cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet']
 
     def test_manufacture(self):
         """ Test manufacture method """
