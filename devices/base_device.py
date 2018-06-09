@@ -103,10 +103,8 @@ class BaseDevice(ABC):
             self._logger.debug(
                 f"{self.ipaddr} - Device type: {self.device_type}")
 
-            if not isinstance(device_type_requirements, tuple):
-                device_type_requirements = (device_type_requirements,)
-
-            if self.device_type in device_type_requirements:
+            # check if the device type is in the list of requirements for teh bug
+            if any(e in self.device_type for e in device_type_requirements):
 
                 # Get list of requirements
                 connection_requirements = bug_check_obj.connection_requirements()
@@ -143,7 +141,7 @@ class BaseDevice(ABC):
                     self._logger.error(f"{self.ipaddr} - No connection to device established")
                     raise ConnectionException("No connection to device established")
             else:
-                self._logger.error(f"{self.ipaddr} - Device Type ({self.device_type}) do not match bug requirements: {device_type_requirements}")
+                self._logger.error(f"{self.ipaddr} - Device Type {self.device_type} do not match bug requirements: {device_type_requirements}")
                 raise ValueError(f"Bug check is not supported on device type: {self.device_type}")
         else:
             self._logger.error(f"{self.ipaddr} - Incorrect Object")
@@ -190,9 +188,6 @@ class BaseDevice(ABC):
                             device.pop("secret", None)
 
                         device_type = self.device_type
-
-                        if isinstance(device_type,str):
-                            device_type = (device_type,)
 
                         # loop through each device_type attempting to connect.
                         for dt in device_type:
