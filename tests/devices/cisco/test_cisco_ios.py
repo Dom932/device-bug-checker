@@ -1,10 +1,10 @@
 import pytest
-
+from tests.test_helpers import MockConnection
 from devices import BaseDevice
 from devices.cisco import BaseCisco
 from devices.cisco import CiscoIOS
 
-cred = {'hostname': 'u', 'password': 'p', 'secret': 's'}
+cred = {'username': 'u', 'password': 'p', 'secret': 's'}
 
 init = {
     'ipaddr': '192.168.254.4',
@@ -28,38 +28,27 @@ sh_ver_output1 = "Cisco IOS Software, 3600 Software (C3660-I-M), Version 12.3(4)
 
 @pytest.fixture
 def device():
-    class MockConnection:
-        """ Mocking class for connection """
-        def __init__(self):
-            self.connection = True
-            self.enable_mode = False
-
-        def disconnect(self):
-            self.connection = False
-
-        def is_alive(self):
-            return self.connection
-
-        def enable(self):
-            self.enable_mode = True
-
-        def check_enable_mode(self):
-            return self.enable_mode
-
-        def exit_enable_mode(self):
-            self.enable_mode = False
-
-        def find_prompt(self):
-            return f"{init['hostname']}#"
-
-        def send_command(self, command):
-            if command.lower() == "sh ver":
-                return sh_ver_output1
-            else:
-                return None
 
     d = CiscoIOS(**init)
-    d.connection = MockConnection()
+
+    command_list = {
+        'sh ver': sh_ver_output1,
+        'show version': sh_ver_output1,
+        None: None
+    }
+
+    mock_param = {
+        'ip': init['ipaddr'],
+        'hostname': init['hostname'],
+        'device_type': d.device_type,
+        'username': cred['username'],
+        'password': cred['password'],
+        'secret': cred['secret'],
+        'command_list': command_list
+    }
+
+    mock = MockConnection(**mock_param)
+    d.connection = mock
     return d
 
 
