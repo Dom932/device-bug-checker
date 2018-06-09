@@ -43,7 +43,7 @@ class BaseDevice(ABC):
         """
         Returns device type
         :param self:
-        :return lst
+        :return str or tuple:
         """
         pass
 
@@ -97,17 +97,20 @@ class BaseDevice(ABC):
 
         if isinstance(bug_check_obj, BaseBug):
 
-            device_type_reqirements = bug_check_obj.device_type_requirements()
+            device_type_requirements = bug_check_obj.device_type_requirements()
             self._logger.debug(
-                f"{self.ipaddr} - Bug {bug_check_obj.bug_id} device type requirements: {device_type_reqirements}")
+                f"{self.ipaddr} - Bug {bug_check_obj.manufacture_bug_id()} device type requirements: {device_type_requirements}")
             self._logger.debug(
                 f"{self.ipaddr} - Device type: {self.device_type}")
 
-            if self.device_type in device_type_reqirements:
+            if not isinstance(device_type_requirements, tuple):
+                device_type_requirements = (device_type_requirements,)
+
+            if self.device_type in device_type_requirements:
 
                 # Get list of requirements
                 connection_requirements = bug_check_obj.connection_requirements()
-                self._logger.debug(f"{self.ipaddr} - Bug {bug_check_obj.bug_id} connection requirements: {connection_requirements}")
+                self._logger.debug(f"{self.ipaddr} - Bug {bug_check_obj.manufacture_bug_id()} connection requirements: {connection_requirements}")
 
                 kwargs = {}
 
@@ -125,7 +128,8 @@ class BaseDevice(ABC):
                     self._logger.debug(f"{self.ipaddr} - Connection is established")
 
                     result = bug_check_obj.check_bug(**kwargs)
-                    bug_id = bug_check_obj.bug_id
+                    bug_id = bug_check_obj.manufacture_bug_id()
+
                     self.bugs[bug_id] = result
 
                     self._logger.debug(f"{self.ipaddr} - Bug ID: {bug_id} Result: {result}")
@@ -139,7 +143,7 @@ class BaseDevice(ABC):
                     self._logger.error(f"{self.ipaddr} - No connection to device established")
                     raise ConnectionException("No connection to device established")
             else:
-                self._logger.error(f"{self.ipaddr} - Device Type ({self.device_type}) do not match bug requirements")
+                self._logger.error(f"{self.ipaddr} - Device Type ({self.device_type}) do not match bug requirements: {device_type_requirements}")
                 raise ValueError(f"Bug check is not supported on device type: {self.device_type}")
         else:
             self._logger.error(f"{self.ipaddr} - Incorrect Object")
@@ -187,9 +191,8 @@ class BaseDevice(ABC):
 
                         device_type = self.device_type
 
-                        # Convert device type to a list.
-                        if isinstance(device_type, tuple):
-                            device_type = [device_type]
+                        if isinstance(device_type,str):
+                            device_type = (device_type,)
 
                         # loop through each device_type attempting to connect.
                         for dt in device_type:
@@ -199,6 +202,7 @@ class BaseDevice(ABC):
                             try:
                                 self._logger.debug(f"{self.ipaddr} - Attempting to connect using "
                                                    f"device type: {dt}")
+
                                 self.connection = ConnectHandler(**device)
                                 self.hostname
                                 self._logger.debug(f"{self.ipaddr} - Hostname: {self.hostname}")

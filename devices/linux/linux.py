@@ -23,9 +23,9 @@ class Linux(BaseDevice):
         """
         Returns device type
         :param self:
-        :return lst
+        :return tuple:
         """
-        return "linux"
+        return "linux",
 
     @property
     def version(self):

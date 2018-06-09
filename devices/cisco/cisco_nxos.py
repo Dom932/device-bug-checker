@@ -14,9 +14,9 @@ class CiscoNXOS(BaseCisco):
         """
         Returns device type
         :param self:
-        :return list:
+        :return tuple:
         """
-        return 'cisco_nxos'
+        return 'cisco_nxos',
 
     def _get_version_regex(self):
         """

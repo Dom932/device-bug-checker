@@ -15,9 +15,9 @@ class CiscoWLC(BaseCisco):
         """
         Returns device type
         :param self:
-        :return lst
+        :return tuple:
         """
-        return "cisco_wlc"
+        return 'cisco_wlc',
 
     @property
     def version(self):

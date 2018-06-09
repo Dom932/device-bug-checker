@@ -14,6 +14,6 @@ class CiscoIOSTelnet(CiscoIOS):
         """
         Returns device type
         :param self:
-        :return list:
+        :return tuple:
         """
-        return 'cisco_ios_telnet'
+        return 'cisco_ios_telnet',

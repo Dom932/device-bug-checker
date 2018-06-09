@@ -14,9 +14,9 @@ class CiscoIOS(BaseCisco):
         """
         Returns device type
         :param self:
-        :return list:
+        :return tuple:
         """
-        return 'cisco_ios'
+        return 'cisco_ios',
 
     def _get_version_regex(self):
         """

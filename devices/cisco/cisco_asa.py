@@ -11,9 +11,9 @@ class CiscoASA(BaseCisco):
         """
         Returns device type
         :param self:
-        :return list:
+        :return tuple:
         """
-        return 'cisco_asa'
+        return 'cisco_asa',
 
     def _get_version_regex(self):
         """

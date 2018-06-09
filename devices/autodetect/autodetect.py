@@ -24,9 +24,9 @@ class AutoDetect(BaseDevice):
         """
         Returns device type
         :param self:
-        :return list:
+        :return tuple:
         """
-        return "autodetect"
+        return "autodetect",
 
     @property
     def version(self):

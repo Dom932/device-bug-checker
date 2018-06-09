@@ -80,7 +80,7 @@ class TestAutoDetect:
 
     def test_device_type(self, device):
         """ Test device_type """
-        assert device.device_type == "autodetect"
+        assert device.device_type == ("autodetect",)
 
     def test_enable_mode(self, device):
         """ Test entering / existing enable mode"""

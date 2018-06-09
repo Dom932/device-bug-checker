@@ -97,7 +97,7 @@ class TestCiscoIOS:
 
     def test_device_type(self, device):
         """ Test device_type """
-        assert device.device_type == "cisco_ios"
+        assert device.device_type == ("cisco_ios",)
 
     def test_enable_mode(self, device):
         """ Test entering / existing enable mode"""
