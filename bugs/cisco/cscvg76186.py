@@ -84,9 +84,9 @@ class CSCvg76186(BaseBug):
     def device_type_requirements():
         """
         Get the device type which this bug can be checked against
-        :return: list of device types
+        :return: tuple of device types
         """
-        return ['cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet']
+        return 'cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet'
 
     @staticmethod
     def manufacture():

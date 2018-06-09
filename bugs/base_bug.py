@@ -75,7 +75,7 @@ class BaseBug(ABC):
     def device_type_requirements():
         """
         Get the device type which this bug can be checked against
-        :return: list of device types
+        :return: tuple of device types
         """
         pass
 

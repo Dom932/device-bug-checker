@@ -70,7 +70,7 @@ class TestCSCvg76186:
 
     def test_device_type_requirements(self):
         """ Test device_type_requirements method"""
-        assert CSCvg76186.device_type_requirements() == ['cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet']
+        assert CSCvg76186.device_type_requirements() == ('cisco_ios', 'cisco_ios_ssh_telnet', 'cisco_ios_telnet')
 
     def test_manufacture(self):
         """ Test manufacture method """
