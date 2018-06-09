@@ -3,65 +3,118 @@ from bugs.base_bug import BaseBug
 
 class TestBug(BaseBug):
     """
-    Simple test bug, which will always return a device as affected. Used for test/debugging the project
+    This is a simple test bug to test bug check functionality on a device.
+
+    This bug check will always report the device as affected
+
+    Notes:
+        Please review and understand the code before running it on any device.
+        This bug check is provided "as is" and is to be used at your own risk.
+
     """
 
-    @property
-    def requirements(self):
+    @staticmethod
+    def bug_description():
         """
-        Requirements for check_bug - connection only required
-        :return:
+        Get information regarding the bug
+        :return: str - Description of bug
         """
+        desc = "Simple Test Bug"
+        return desc
 
-        return ["connection"]
+    @staticmethod
+    def bug_reference():
+        """
+        Get reference of bug information
+        :return: str - URL to the source information
+        """
+        return None
 
-    @property
-    def bug_id(self):
+    @staticmethod
+    def manufacture_bug_id():
         """
         Returns the cisco Bug ID this class checks for
         :return: str - Bug ID
         """
         return "TestBug"
 
-    @property
-    def affected_devices(self):
+    @staticmethod
+    def cve_id():
+        """
+        Get the Common Vulnerabilities and Exposure (CVE) ID
+        :return: CSV ID or None if there is not one
+        """
+        return None
+
+    @staticmethod
+    def bug_severity():
+        """
+        Get the severity of the bug, based on manufacture scoring.
+        Critical, Warning, Error, Informational, Minimal
+        :return: The bug severity
+        """
+        return "Informational"
+
+    @staticmethod
+    def connection_requirements():
+        """
+        Connection requirements for this bug check to check the bug. These will be passed as kwargs to to
+        bug checker function.
+        :return:
+        """
+        return ["connection"]
+
+    @staticmethod
+    def device_type_requirements():
+        """
+        Get the device type which this bug can be checked against
+        :return: tuple of device types
+        """
+        return 'linux',
+
+    @staticmethod
+    def manufacture():
+        """
+        Returns which manufacture this device bug affects
+        :return: str
+        """
+        return None
+
+    @staticmethod
+    def enable_mode_required():
+        """
+        Returns if enable mode is required for the bug check
+        :return: bool
+        """
+        return False
+
+    @staticmethod
+    def affected_devices():
         """
         Return list devices types which are affected by this put
         ["Switch","Router","Firewall","AP"]
         :return: list
         """
-        return ["Switch", "Router", "Firewall", "AP"]
+        return ["Switch","Router","Firewall","AP"]
 
-    @property
-    def remediate_implemented(self):
+    @staticmethod
+    def remediate_implemented():
         """
         Check if remediate function implemented
         :return: bool
         """
         return False
 
-    @property
-    def manufacture(self):
-        """
-        Returns which manufacture this device bug affects
-        :return: str
-        """
-        return "Cisco"
-
     def check_bug(self, connection, **kwargs):
         """
-        Checks if device if the bug is present.
-
-        Not this bug is will always indicate that the device is impacted by the bug.
-
+        Checks if device if the bug is present
         :param connection: connection to device
         :type connection: netmiko.ConnectHandler
 
         :return: namedtuple - Bug(impacted(bool) output(str))
         """
 
-        output = connection.send_command("testcommand")
-
+        output = connection.send_command("Unknown cmd")
         return self.Bug(True, output)
 
     def remediate_bug(self):
@@ -69,15 +122,9 @@ class TestBug(BaseBug):
         Method to remediate bug.
 
         Current not implemented
-        :return:
-        """
-        # TODO - implement remediate
-        raise NotImplemented("Remediate not implemented")
 
-    @property
-    def enable_mode_required(self):
+        :raises NotImplemented
+
         """
-        Returns if enable mode is required for the bug check
-        :return: bool
-        """
-        return False
+        # TODO - implement remediate_bug
+        raise NotImplemented("Remediate not implemented")
