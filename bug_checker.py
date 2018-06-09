@@ -22,15 +22,18 @@ def check_bug(device, bug_list):
     """
 
     try:
-        for bug in bug_list:
-            _logger.info(f"{device.ipaddr} - Starting {bug.bug_id} bug check")
 
-            if bug.enable_mode_required:
-                _logger.debug(f"{device.ipaddr} - Enable mode required for {bug.bug_id}")
+        device.connect()
+        for bug in bug_list:
+            bug = bug()
+            _logger.info(f"{device.ipaddr} - Starting {bug.manufacture_bug_id()} bug check")
+
+            if bug.enable_mode_required():
+                _logger.debug(f"{device.ipaddr} - Enable mode required for {bug.manufacture_bug_id()}")
                 device.enter_enable_mode()
 
             device.check_bug(bug)
-            _logger.info(f"{device.ipaddr} - Completed {bug.bug_id} bug check")
+            _logger.info(f"{device.ipaddr} - Completed {bug.manufacture_bug_id()} bug check")
 
         _logger.debug(f"{device.ipaddr} - Disconnecting from device")
         device.disconnect()
@@ -232,10 +235,10 @@ if __name__ == "__main__":
             if not (parse_args.bugid or parse_args.bugsummary):
                 print("If -l is spesified, --bugid or --bugsummary are required")
             else:
-               if parse_args.bugid:
-                   print_bug_detail(parse_args.bugid)
-               elif parse_args.bugsummary:
-                   print_bug_summary()
+                if parse_args.bugid:
+                    print_bug_detail(parse_args.bugid)
+                elif parse_args.bugsummary:
+                    print_bug_summary()
 
         elif parse_args.checkdevice:
             if parse_args.checkdevice and not parse_args.bugid and not parse_args.inputcsv and not parse_args.outputcsv:
